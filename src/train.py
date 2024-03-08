@@ -5,10 +5,12 @@ import config as config
 from dataset import get_transforms,CLIPDataset
 from utils import *
 from tqdm import tqdm
-from transformers import AutoTokenizer
+from transformers import DistilBertTokenizer
 from CLIP import *
 import itertools
+import warnings
 
+warnings.filterwarnings("ignore")
 #----------------------Dataset--------------------#
 def make_train_valid_dfs():
     """
@@ -93,7 +95,7 @@ def train_epoch(model, train_loader, optimizer, lr_scheduler, step):
         loss_meter.update(loss.item(), count)
 
         tqdm_object.set_postfix(train_loss=loss_meter.avg, lr=get_lr(optimizer))
-        return loss_meter
+    return loss_meter
     
 def valid_epoch(model, valid_loader):
     """
@@ -128,8 +130,7 @@ def trainer():
     Notes: Training loop with LR scheduling and model saving based on validation loss.
     """
     train_df, valid_df = make_train_valid_dfs()
-    tokenizer = AutoTokenizer.from_pretrained(config.text_tokenizer)
-    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    tokenizer = DistilBertTokenizer.from_pretrained(config.text_tokenizer)
 
     train_loader = build_dataloaders(train_df, tokenizer, mode="train")
     valid_loader = build_dataloaders(valid_df, tokenizer, mode="valid")
@@ -159,10 +160,9 @@ def trainer():
         model.eval()
         with torch.no_grad():
             valid_loss = valid_epoch(model, valid_loader)
-
         if valid_loss.avg < best_loss:
             best_loss = valid_loss.avg
-            torch.save(model.state_dict(), "../models/clip_model.pt")
+            torch.save(model.state_dict(), "C:/Users/shrey/Desktop/Shreyas/Projects/Deep Learning/Multimodal/OpenAI-CLIP/models/clip.pt")
             print("Saved Best Model!")
 
         lr_scheduler.step(valid_loss.avg)

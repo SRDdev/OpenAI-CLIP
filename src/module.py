@@ -1,8 +1,7 @@
 import torch 
 from torch import nn
 import timm
-# from transformers import DistilBertModel, DistilBertConfig , ViTModel
-from transformers import PhiModel, PhiConfig
+from transformers import DistilBertModel, DistilBertConfig , ViTModel
 import config as config
 
 #-------------------------Image Encoder-------------------------#
@@ -42,9 +41,9 @@ class TextEncoder(nn.Module):
         super().__init__()
 
         if pretrained:
-            self.model = PhiModel.from_pretrained(model_name,trust_remote_code=True)
+            self.model = DistilBertModel.from_pretrained(model_name)
         else:
-            self.model = PhiModel(config=PhiConfig())
+            self.model = DistilBertModel(config=DistilBertConfig())
 
         for p in self.model.parameters():
             p.requires_grad = trainable
@@ -73,12 +72,11 @@ class ProjectionHead(nn.Module):
         self.fc = nn.Linear(projection_dim, projection_dim)
         self.dropout = nn.Dropout(dropout)
         self.layer_norm = nn.LayerNorm(projection_dim)
-    
+
     def forward(self, x):
         projected = self.projection(x)
         x = self.gelu(projected)
         x = self.fc(x)
         x = self.dropout(x)
-        x = x + projected
-        x = self.layer_norm(x)
-        return x
+        x += projected
+        return self.layer_norm(x)

@@ -22,7 +22,7 @@ def get_image_embeddings(valid_df, model_path):
     with torch.no_grad():
         for batch in tqdm(valid_loader):
             image_features = model.image_encoder(batch["image"].to(config.device))
-            image_embeddings = model.image_projection(image_features)
+            image_embeddings = model.image_proj(image_features)
             valid_image_embeddings.append(image_embeddings)
     return model, torch.cat(valid_image_embeddings)
 
@@ -37,7 +37,7 @@ def find_matches(model, image_embeddings, query, image_filenames, n=9):
         text_features = model.text_encoder(
             input_ids=batch["input_ids"], attention_mask=batch["attention_mask"]
         )
-        text_embeddings = model.text_projection(text_features)
+        text_embeddings = model.text_proj(text_features)
     
     image_embeddings_n = F.normalize(image_embeddings, p=2, dim=-1)
     text_embeddings_n = F.normalize(text_embeddings, p=2, dim=-1)
