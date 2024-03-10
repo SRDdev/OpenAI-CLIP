@@ -1,9 +1,13 @@
 # OpenAI CLIP: Contrastive Language-Image Pre-training
 
 This repository is an educational attempt to understand and replicate OpenAI CLIP's 2021 model in PyTorch.
+
 ```
-Note: OpenAI has open-sourced some code related to the CLIP model, but it is complicated to understand. I prefer to implement it based on the paper. Additionally, I found a helpful tutorial inspired by the CLIP model on Keras code examples, which assisted me in replicating the code in PyTorch.
+Note: OpenAI has open-sourced code related to the CLIP model, but it is complicated to understand.
+I prefer to implement it based on the paper. Additionally, I found a helpful tutorial inspired by the
+CLIP model on Keras code examples, which assisted me in replicating the code in PyTorch.
 ```
+
 ---
 
 OpenAI introduced the CLIP model in 2021, taking a backseat to the prominence of DALL-E. This project delves into the process of building the CLIP model from scratch using PyTorch, offering a simplified approach compared to the initially complex and extensive code released by OpenAI. Inspired by a Keras code examples tutorial, relevant sections have been translated into PyTorch, presenting a concise and accessible tutorial tailored for the PyTorch framework.
